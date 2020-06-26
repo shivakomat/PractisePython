@@ -1,0 +1,39 @@
+input = "HELLOWORLD"
+formats = {'bold': [(0,1)], 'italic' : [(1,6)]}
+
+def convert_to_html(text, htmlFormats):
+    result = ""
+    text_chars = list(input)
+    stack=[]
+    for index, char in enumerate(text_chars):
+        starting_position = None
+        end_position = None
+        starting_tag = None
+        ending_tag = None
+        for key,value in formats.items():
+            for v in value:
+                if(v[0] == index):
+                    starting_position = index
+                    starting_tag = key
+                elif(v[1] == index):
+                    end_position = index
+                    ending_tag = key
+        if(starting_position is not None):
+            stack.append(starting_tag)
+            result = result + "<" + list(starting_tag)[0] + ">"
+        if(end_position is not None):
+            temp=[]
+            last_tag = None
+            while(len(stack) > 0):
+                last_tag = stack.pop()
+                temp.append(last_tag)
+                result = result + "</" + list(last_tag)[0] + ">"
+            for tag in temp:
+                if(tag != ending_tag):
+                    result = result + "<" + list(tag)[0] + ">"
+                    stack.append(tag)
+        result = result + str(char)
+    return result
+
+
+print(convert_to_html(input, formats))
